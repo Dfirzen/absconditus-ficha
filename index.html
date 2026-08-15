@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSCONDITUS — Ficha de Investigador</title>
+<style>
+/* ================= TOKENS ================= */
+:root {
+    --void: #050505;
+    --ink: #0d0d0d;
+    --ink-raised: #161514;
+    --bone: #f2efe8;
+    --bone-dim: #a29c8e;
+    --blood: #8a1420;
+    --blood-bright: #c41f2e;
+    --line: #2a2825;
+    --line-strong: #423f3a;
+    --font-display: 'Metal Mania', cursive;
+    --font-body: 'EB Garamond', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--void);
+    background-image: radial-gradient(ellipse at top, #120e0e 0%, #050505 60%);
+    color: var(--bone);
+    font-family: var(--font-body);
+    padding: 30px 16px 80px;
+}
+
+.dossier { max-width: 1100px; margin: 0 auto; }
+
+/* ================= HEADER ================= */
+.dossier-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--blood);
+    margin-bottom: 22px;
+}
+
+.emblem { width: 70px; height: 70px; flex-shrink: 0; }
+
+.wordmark {
+    font-family: var(--font-display);
+    font-size: 2.6em;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--bone);
+    text-shadow: 0 0 18px rgba(138, 20, 32, 0.55);
+    line-height: 1;
+}
+
+.tagline {
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blood-bright);
+    margin-top: 6px;
+}
+
+/* ================= TABS ================= */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line-strong);
+}
+
+.tab-btn {
+    background: var(--ink);
+    color: var(--bone-dim);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    padding: 10px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.tab-btn:hover { color: var(--bone); }
+
+.tab-btn.active {
+    color: var(--bone);
+    background: var(--ink-raised);
+    border-color: var(--blood);
+    box-shadow: inset 0 2px 0 var(--blood-bright);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadein 0.25s ease; }
+
+@keyframes fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= LAYOUT / CARD ================= */
+.panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+.panel-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.panel-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 900px) {
+    .panel-grid-3, .panel-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+    .panel-grid-3, .panel-grid-4 { grid-template-columns: 1fr; }
+}
+
+.card {
+    background: var(--ink);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blood);
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.card h2 {
+    font-family: var(--font-display);
+    font-size: 1.3em;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--bone);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+}
+.card h2.mt { margin-top: 22px; }
+
+.card h3.sub {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blood-bright);
+    margin: 16px 0 8px;
+}
+
+.hint {
+    font-size: 0.85em;
+    color: var(--bone-dim);
+    font-style: italic;
+    margin-bottom: 12px;
+}
+.micro-hint {
+    font-size: 0.72em;
+    color: var(--bone-dim);
+    margin-top: 8px;
+    font-family: var(--font-mono);
+}
+
+/* ================= FORM ELEMENTS ================= */
+.field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.field-row label {
+    min-width: 130px;
+    font-size: 0.9em;
+    color: var(--bone-dim);
+}
+.field-row-col { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.field-row-col label {
+    font-family: var(--font-mono);
+    font-size: 0.72em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blood-bright);
+}
+
+.input {
+    flex-grow: 1;
+    width: 100%;
+    background: var(--void);
+    border: 1px solid var(--line-strong);
+    color: var(--bone);
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 1em;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input:focus {
+    outline: none;
+    border-color: var(--blood-bright);
+    box-shadow: 0 0 6px rgba(196, 31, 46, 0.35);
+}
+.input-sm { width: 70px; flex-grow: 0; text-align: center; }
+.textarea-sm { min-height: 60px; resize: vertical; font-size: 0.9em; }
+.textarea-md { min-height: 100px; resize: vertical; font-size: 0.9em; }
+
+/* ================= TAG SELECT (radio-style) ================= */
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-group-wrap { flex-wrap: wrap; }
+
+.tag {
+    background: var(--void);
+    border: 1px solid var(--line-strong);
+    color: var(--bone-dim);
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    letter-spacing: 0.5px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.tag:hover { border-color: var(--blood-bright); color: var(--bone); }
+.tag.selected {
+    background: var(--blood);
+    border-color: var(--blood-bright);
+    color: var(--bone);
+    box-shadow: 0 0 8px rgba(138, 20, 32, 0.6);
+}
+.tag-rank { width: 40px; text-align: center; }
+
+/* ================= ATTRIBUTE PIPS ================= */
+.attr-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.attr-name { font-size: 0.88em; min-width: 130px; color: var(--bone); }
+.pip-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.pip {
+    width: 16px;
+    height: 16px;
+    background: var(--void);
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+.pip:hover { border-color: var(--blood-bright); }
+.pip.filled { background: var(--blood); border-color: var(--blood-bright); }
+
+.star-row { display: flex; gap: 3px; }
+.star {
+    font-size: 1.1em;
+    color: var(--line-strong);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.star.filled { color: var(--blood-bright); }
+.spec-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 0.9em;
+}
+.spec-item:last-child { border-bottom: none; }
+
+/* ================= GAUGES ================= */
+.gauge-card h2 { display: flex; align-items: center; gap: 8px; font-size: 1.05em; }
+.gauge-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6em;
+    color: var(--blood-bright);
+    letter-spacing: 1px;
+}
+.gauge-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.gauge-bar {
+    height: 10px;
+    background: var(--void);
+    border: 1px solid var(--line-strong);
+}
+.gauge-fill { height: 100%; width: 0%; transition: width 0.3s; }
+.gauge-hp, .gauge-sp, .gauge-fadiga { background: var(--blood); }
+.gauge-bar-san { background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, var(--line) 6px, var(--line) 7px); }
+.gauge-san { background: repeating-linear-gradient(45deg, var(--bone-dim), var(--bone-dim) 4px, var(--void) 4px, var(--void) 8px); }
+
+/* ================= RESIST / FAME GRID ================= */
+.resist-grid, .fame-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+.resist-item, .fame-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.resist-item label, .fame-item label {
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+}
+
+/* ================= AWAKEN (Despertar Superno) ================= */
+.awaken-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+.awaken-card {
+    background: var(--void);
+    border: 1px solid var(--line-strong);
+    color: var(--bone);
+    text-align: left;
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.2s;
+}
+.awaken-card strong { font-family: var(--font-display); font-weight: 400; font-size: 1.05em; }
+.awaken-card span { font-size: 0.82em; color: var(--bone-dim); }
+.awaken-card:hover { border-color: var(--blood-bright); }
+.awaken-card.selected {
+    border-color: var(--blood-bright);
+    background: linear-gradient(180deg, rgba(138,20,32,0.18), transparent);
+    box-shadow: 0 0 14px rgba(138, 20, 32, 0.35);
+}
+
+/* ================= DYNAMIC LISTS ================= */
+.dyn-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.dyn-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: start;
+    background: var(--void);
+    border: 1px solid var(--line);
+    padding: 12px;
+}
+.dyn-row-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+}
+.dyn-remove {
+    background: none;
+    border: none;
+    color: var(--blood-bright);
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 4px 8px;
+}
+.dyn-remove:hover { color: var(--bone); }
+
+.btn-add {
+    background: transparent;
+    border: 1px dashed var(--line-strong);
+    color: var(--bone-dim);
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    letter-spacing: 1px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+}
+.btn-add:hover { border-color: var(--blood-bright); color: var(--bone); }
+
+.relic-sync {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+}
+.relic-sync-label {
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    color: var(--blood-bright);
+    min-width: 40px;
+}
+.relic-awake {
+    font-family: var(--font-mono);
+    font-size: 0.68em;
+    letter-spacing: 1px;
+    color: var(--blood-bright);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* ================= CARTÃO DO CREDO ================= */
+.card-flip {
+    perspective: 1200px;
+    max-width: 460px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+.card-flip-inner {
+    position: relative;
+    width: 100%;
+    min-height: 260px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+.card-flip.flipped .card-flip-inner { transform: rotateY(180deg); }
+
+.cred-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    background: linear-gradient(160deg, #141212, #0a0909);
+    border: 1px solid var(--blood);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.cred-back { transform: rotateY(180deg); }
+
+.cred-emblem {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+}
+.cred-photo { display: flex; gap: 14px; align-items: center; }
+.cred-photo-box {
+    width: 64px;
+    height: 80px;
+    border: 1px dashed var(--line-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.6em;
+    color: var(--bone-dim);
+    flex-shrink: 0;
+}
+.cred-id-block { display: flex; flex-direction: column; gap: 2px; }
+.cred-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.cred-row { display: flex; flex-direction: column; gap: 4px; }
+.cred-label {
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blood-bright);
+}
+.cred-value {
+    font-family: var(--font-body);
+    font-size: 1em;
+    color: var(--bone);
+}
+.cred-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--bone);
+    font-family: var(--font-body);
+    font-size: 0.95em;
+    padding: 2px 0;
+}
+.cred-input:focus { outline: none; border-color: var(--blood-bright); }
+.cred-signature { font-style: italic; }
+.cred-qr {
+    width: 90px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+.cred-qr svg { width: 70px; height: 70px; opacity: 0.75; }
+
+/* ================= FOOTER ================= */
+.dossier-footer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-strong);
+}
+.btn-save {
+    background: var(--blood);
+    border: 1px solid var(--blood-bright);
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    padding: 12px 26px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-save:hover { background: var(--blood-bright); box-shadow: 0 0 14px rgba(196, 31, 46, 0.5); }
+.save-status {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    color: var(--bone-dim);
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+.file-actions {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  margin: 0 auto 12px;
+  max-width: 1200px;
+  background: rgba(10,10,14,.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.file-actions .btn {
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: inherit;
+}
+@media (max-width: 560px) {
+  .file-actions { gap: 6px; padding: 8px; }
+  .file-actions .btn { flex: 1 1 calc(50% - 6px); font-size: 12px; }
+}
+</style>
+
+</head>
+<body>
+<div class="file-actions" aria-label="Gerenciar ficha">
+  <button type="button" class="btn btn-secondary" id="newCharacterBtn">🆕 Nova ficha</button>
+  <button type="button" class="btn btn-secondary" id="exportCharacterBtn">💾 Exportar ficha</button>
+  <button type="button" class="btn btn-secondary" id="importCharacterBtn">📂 Importar ficha</button>
+  <input type="file" id="importCharacterInput" accept=".json,.absconditus,application/json" hidden>
+</div>
+
+
+<div class="dossier">
+
+  <header class="dossier-header">
+    <svg class="emblem" viewBox="0 0 680 680" aria-hidden="true">
+      <defs>
+        <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f2efe8"/>
+          <stop offset="55%" stop-color="#b8b3a8"/>
+          <stop offset="100%" stop-color="#4a4640"/>
+        </linearGradient>
+      </defs>
+      <circle cx="340" cy="340" r="298" fill="none" stroke="#8a1420" stroke-width="2"/>
+      <path d="M428.9,95.6 A260,260 0 0,1 584.4,251.1" fill="none" stroke="url(#bladeGrad)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M584.4,428.9 A260,260 0 0,1 428.9,584.4" fill="none" stroke="url(#bladeGrad)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M251.1,584.4 A260,260 0 0,1 95.6,428.9" fill="none" stroke="url(#bladeGrad)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M95.6,251.1 A260,260 0 0,1 251.1,95.6" fill="none" stroke="url(#bladeGrad)" stroke-width="14" stroke-linecap="round"/>
+      <g id="swordN">
+        <rect x="333" y="300" width="14" height="45" fill="#111" stroke="#8a1420" stroke-width="1"/>
+        <rect x="313" y="295" width="54" height="9" fill="url(#bladeGrad)" stroke="#111" stroke-width="1"/>
+        <circle cx="340" cy="299" r="6" fill="#8a1420" stroke="#f2efe8" stroke-width="1"/>
+        <polygon points="340,40 350,130 345,296 335,296 330,130" fill="url(#bladeGrad)" stroke="#111" stroke-width="1.5"/>
+      </g>
+      <use href="#swordN" transform="rotate(90 340 340)"/>
+      <use href="#swordN" transform="rotate(180 340 340)"/>
+      <use href="#swordN" transform="rotate(270 340 340)"/>
+      <circle cx="340" cy="340" r="62" fill="#0a0a0a" stroke="#8a1420" stroke-width="3"/>
+      <circle cx="340" cy="340" r="30" fill="#1a1a1a" stroke="#8a1420" stroke-width="1.5"/>
+      <ellipse cx="340" cy="340" rx="9" ry="14" fill="#8a1420"/>
+    </svg>
+    <div class="titles">
+      <h1 class="wordmark">Absconditus</h1>
+      <p class="tagline">Credo do Caçador — Ficha de Investigador</p>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="identidade" type="button">Identidade</button>
+    <button class="tab-btn" data-tab="atributos" type="button">Atributos</button>
+    <button class="tab-btn" data-tab="combate" type="button">Combate</button>
+    <button class="tab-btn" data-tab="equipamento" type="button">Equipamento</button>
+    <button class="tab-btn" data-tab="vinculos" type="button">Vínculos</button>
+  </nav>
+
+  <main class="tab-panels">
+
+    <!-- ============ IDENTIDADE ============ -->
+    <section id="identidade" class="tab-panel active">
+
+      <div class="panel-grid">
+        <div class="card">
+          <h2>Dados Pessoais</h2>
+          <div class="field-row">
+            <label>Nome</label>
+            <input type="text" data-field="personal.nome" class="input">
+          </div>
+          <div class="field-row">
+            <label>Codinome</label>
+            <input type="text" data-field="personal.codinome" class="input">
+          </div>
+          <div class="field-row">
+            <label>Idade</label>
+            <input type="number" min="0" data-field="personal.idade" class="input input-sm">
+          </div>
+
+          <h3 class="sub">Raça</h3>
+          <div class="tag-group" data-radio="personal.raca">
+            <button type="button" class="tag" data-value="Humano">Humano</button>
+            <button type="button" class="tag" data-value="Vampiro">Vampiro</button>
+            <button type="button" class="tag" data-value="Licantropo">Licantropo</button>
+            <button type="button" class="tag" data-value="Celestial">Celestial</button>
+            <button type="button" class="tag" data-value="Demônio">Demônio</button>
+            <button type="button" class="tag" data-value="Híbrido">Híbrido</button>
+          </div>
+
+          <h3 class="sub">Organização</h3>
+          <div class="tag-group" data-radio="personal.organizacao">
+            <button type="button" class="tag" data-value="Credo do Caçador">Credo do Caçador</button>
+            <button type="button" class="tag" data-value="Investigador">Investigador</button>
+            <button type="button" class="tag" data-value="Igreja">Igreja</button>
+            <button type="button" class="tag" data-value="Independente">Independente</button>
+            <button type="button" class="tag" data-value="Outro">Outro</button>
+          </div>
+
+          <h3 class="sub">Ranking</h3>
+          <div class="tag-group" data-radio="personal.ranking">
+            <button type="button" class="tag tag-rank" data-value="E">E</button>
+            <button type="button" class="tag tag-rank" data-value="D">D</button>
+            <button type="button" class="tag tag-rank" data-value="C">C</button>
+            <button type="button" class="tag tag-rank" data-value="B">B</button>
+            <button type="button" class="tag tag-rank" data-value="A">A</button>
+            <button type="button" class="tag tag-rank" data-value="S">S</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Classe</h2>
+          <p class="hint">Especialização principal do investigador.</p>
+          <div class="tag-group tag-group-wrap" data-radio="personal.classe">
+            <button type="button" class="tag" data-value="Caçador">Caçador</button>
+            <button type="button" class="tag" data-value="Atirador">Atirador</button>
+            <button type="button" class="tag" data-value="Espadachim">Espadachim</button>
+            <button type="button" class="tag" data-value="Exorcista">Exorcista</button>
+            <button type="button" class="tag" data-value="Feiticeiro">Feiticeiro</button>
+            <button type="button" class="tag" data-value="Bruxo">Bruxo</button>
+            <button type="button" class="tag" data-value="Investigador">Investigador</button>
+            <button type="button" class="tag" data-value="Suporte">Suporte</button>
+            <button type="button" class="tag" data-value="Invocador">Invocador</button>
+            <button type="button" class="tag" data-value="Especialista">Especialista</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Cartão do Credo</h2>
+        <p class="hint">Clique no cartão para virar.</p>
+        <div class="card-flip" id="credCardFlip">
+          <div class="card-flip-inner">
+            <div class="cred-face cred-front">
+              <div class="cred-emblem">
+                <svg viewBox="0 0 680 680"><use href="#swordN"/></svg>
+              </div>
+              <div class="cred-row cred-photo">
+                <div class="cred-photo-box">FOTO</div>
+                <div class="cred-id-block">
+                  <span class="cred-label">Nome completo</span>
+                  <span class="cred-value" data-mirror="personal.nome">—</span>
+                  <span class="cred-label">Especialização</span>
+                  <span class="cred-value" data-mirror="personal.classe">—</span>
+                </div>
+              </div>
+              <div class="cred-grid">
+                <div><span class="cred-label">Ranking</span><span class="cred-value" data-mirror="personal.ranking">—</span></div>
+                <div><span class="cred-label">Nº identificação</span><input type="text" class="cred-input" data-field="credCard.numeroId" placeholder="AB-0000"></div>
+                <div><span class="cred-label">Tipo sanguíneo</span><input type="text" class="cred-input" data-field="credCard.tipoSanguineo" placeholder="O+"></div>
+              </div>
+            </div>
+            <div class="cred-face cred-back">
+              <div class="cred-qr">
+                <svg viewBox="0 0 680 680"><use href="#swordN"/></svg>
+                <span class="cred-label">Selo Arcano</span>
+              </div>
+              <div class="cred-row">
+                <span class="cred-label">Afinidade Superno</span>
+                <span class="cred-value" data-mirror="elemental.afinidade">—</span>
+              </div>
+              <div class="cred-row">
+                <span class="cred-label">Contato de emergência</span>
+                <input type="text" class="cred-input" data-field="credCard.contatoEmergencia">
+              </div>
+              <div class="cred-row">
+                <span class="cred-label">Status do membro</span>
+                <select class="cred-input" data-field="credCard.status">
+                  <option value="Ativo">Ativo</option>
+                  <option value="Afastado">Afastado</option>
+                  <option value="Suspenso">Suspenso</option>
+                  <option value="Falecido">Falecido</option>
+                </select>
+              </div>
+              <div class="cred-row">
+                <span class="cred-label">Assinatura do Líder do Credo</span>
+                <input type="text" class="cred-input cred-signature" data-field="credCard.assinaturaLider">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ATRIBUTOS ============ -->
+    <section id="atributos" class="tab-panel">
+      <div class="panel-grid panel-grid-3">
+        <div class="card" id="attrCorpo">
+          <h2>Corpo</h2>
+        </div>
+        <div class="card" id="attrMente">
+          <h2>Mente</h2>
+        </div>
+        <div class="card" id="attrEspirito">
+          <h2>Espírito</h2>
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="card">
+          <h2>Afinidade Elemental</h2>
+          <p class="hint">Escolha uma principal.</p>
+          <div class="tag-group tag-group-wrap" data-radio="elemental.afinidade">
+            <button type="button" class="tag" data-value="Fogo">Fogo</button>
+            <button type="button" class="tag" data-value="Água">Água</button>
+            <button type="button" class="tag" data-value="Terra">Terra</button>
+            <button type="button" class="tag" data-value="Vento">Vento</button>
+            <button type="button" class="tag" data-value="Natureza">Natureza</button>
+            <button type="button" class="tag" data-value="Luz">Luz</button>
+            <button type="button" class="tag" data-value="Trevas">Trevas</button>
+            <button type="button" class="tag" data-value="Astral">Astral</button>
+            <button type="button" class="tag" data-value="Sangue">Sangue</button>
+            <button type="button" class="tag" data-value="Metal">Metal</button>
+            <button type="button" class="tag" data-value="Gelo">Gelo</button>
+            <button type="button" class="tag" data-value="Relâmpago">Relâmpago</button>
+            <button type="button" class="tag" data-value="Sombras">Sombras</button>
+          </div>
+
+          <h2 class="mt">Folk</h2>
+          <p class="hint">Especialização espiritual.</p>
+          <div class="tag-group tag-group-wrap" data-radio="folk.tipo">
+            <button type="button" class="tag" data-value="Bestial">Bestial</button>
+            <button type="button" class="tag" data-value="Espiritual">Espiritual</button>
+            <button type="button" class="tag" data-value="Natural">Natural</button>
+            <button type="button" class="tag" data-value="Divino">Divino</button>
+            <button type="button" class="tag" data-value="Abissal">Abissal</button>
+            <button type="button" class="tag" data-value="Arcano">Arcano</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Especializações</h2>
+        <p class="hint">Nível de treino em cada perícia, de 0 a 5 estrelas.</p>
+        <div id="specList" class="spec-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ COMBATE ============ -->
+    <section id="combate" class="tab-panel">
+      <div class="panel-grid panel-grid-4">
+        <div class="card gauge-card">
+          <h2>Vida <span class="gauge-tag">HP</span></h2>
+          <div class="gauge-inputs">
+            <input type="number" min="0" data-field="vitals.hpAtual" data-gauge="hp" class="input input-sm">
+            <span>/</span>
+            <input type="number" min="0" data-field="vitals.hpMax" data-gauge="hp" class="input input-sm">
+          </div>
+          <div class="gauge-bar"><div class="gauge-fill gauge-hp" id="gaugeHp"></div></div>
+        </div>
+        <div class="card gauge-card">
+          <h2>Superno <span class="gauge-tag">SP</span></h2>
+          <div class="gauge-inputs">
+            <input type="number" min="0" data-field="vitals.spAtual" data-gauge="sp" class="input input-sm">
+            <span>/</span>
+            <input type="number" min="0" data-field="vitals.spMax" data-gauge="sp" class="input input-sm">
+          </div>
+          <div class="gauge-bar"><div class="gauge-fill gauge-sp" id="gaugeSp"></div></div>
+        </div>
+        <div class="card gauge-card">
+          <h2>Sanidade <span class="gauge-tag">SAN</span></h2>
+          <div class="gauge-inputs">
+            <input type="number" min="0" data-field="vitals.sanAtual" data-gauge="san" class="input input-sm">
+            <span>/</span>
+            <input type="number" min="0" data-field="vitals.sanMax" data-gauge="san" class="input input-sm">
+          </div>
+          <div class="gauge-bar gauge-bar-san"><div class="gauge-fill gauge-san" id="gaugeSan"></div></div>
+          <p class="micro-hint">Quanto menor, mais fácil sofrer corrupção, loucura, possessão.</p>
+        </div>
+        <div class="card gauge-card">
+          <h2>Fadiga</h2>
+          <div class="gauge-inputs">
+            <input type="number" min="0" data-field="vitals.fadigaAtual" data-gauge="fadiga" class="input input-sm">
+            <span>/</span>
+            <input type="number" min="0" data-field="vitals.fadigaMax" data-gauge="fadiga" class="input input-sm">
+          </div>
+          <div class="gauge-bar"><div class="gauge-fill gauge-fadiga" id="gaugeFadiga"></div></div>
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="card">
+          <h2>Resistências</h2>
+          <div id="resistList" class="resist-grid"></div>
+        </div>
+        <div class="card">
+          <h2>Corrupção</h2>
+          <p class="hint">Quanto maior, maior o risco de perder o controle.</p>
+          <div id="corruptionPips" class="pip-row"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Despertar Superno</h2>
+        <p class="hint">Estado superior temporário, ativado em situações extremas.</p>
+        <div class="awaken-grid" data-radio="despertar.tipo">
+          <button type="button" class="awaken-card" data-value="Físico">
+            <strong>Despertar Físico</strong>
+            <span>Aumento de força, velocidade e reflexos.</span>
+          </button>
+          <button type="button" class="awaken-card" data-value="Espiritual">
+            <strong>Despertar Espiritual</strong>
+            <span>Amplia o controle do Superno e reduz o custo de técnicas.</span>
+          </button>
+          <button type="button" class="awaken-card" data-value="Mental">
+            <strong>Despertar Mental</strong>
+            <span>Percepção ampliada, revela ilusões, resiste à corrupção.</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EQUIPAMENTO ============ -->
+    <section id="equipamento" class="tab-panel">
+      <div class="panel-grid">
+        <div class="card">
+          <h2>Inventário</h2>
+          <div class="field-row"><label>Arma Principal</label><input type="text" class="input" data-field="inventory.armaPrincipal"></div>
+          <div class="field-row"><label>Arma Secundária</label><input type="text" class="input" data-field="inventory.armaSecundaria"></div>
+          <div class="field-row"><label>Arma Reserva</label><input type="text" class="input" data-field="inventory.armaReserva"></div>
+          <div class="field-row"><label>Objeto Superno</label><input type="text" class="input" data-field="inventory.objetoSuperno"></div>
+          <div class="field-row"><label>Talismãs</label><input type="text" class="input" data-field="inventory.talisma"></div>
+          <div class="field-row"><label>Munições</label><input type="text" class="input" data-field="inventory.municao"></div>
+          <div class="field-row"><label>Curativos</label><input type="text" class="input" data-field="inventory.curativos"></div>
+        </div>
+
+        <div class="card">
+          <h2>Equipamentos</h2>
+          <div class="field-row"><label>Capacete</label><input type="text" class="input" data-field="equipment.capacete"></div>
+          <div class="field-row"><label>Peitoral</label><input type="text" class="input" data-field="equipment.peitoral"></div>
+          <div class="field-row"><label>Luvas</label><input type="text" class="input" data-field="equipment.luvas"></div>
+          <div class="field-row"><label>Calça</label><input type="text" class="input" data-field="equipment.calca"></div>
+          <div class="field-row"><label>Botas</label><input type="text" class="input" data-field="equipment.botas"></div>
+          <div class="field-row"><label>Acessórios</label><input type="text" class="input" data-field="equipment.acessorios"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Objetos Superno</h2>
+        <p class="hint">Ex.: Tentetsutou, Anel do Curupira, Grimório, Varinha, Rosário, Amuleto.</p>
+        <div id="objetosSupernoList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="objetosSuperno">+ Adicionar objeto</button>
+      </div>
+
+      <div class="card">
+        <h2>Proficiência</h2>
+        <p class="hint">Quanto mais uma arma é usada, mais ela evolui.</p>
+        <div id="proficiencyList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="proficiencias">+ Adicionar arma</button>
+      </div>
+
+      <div class="card">
+        <h2>Relíquias</h2>
+        <p class="hint">Armas lendárias possuem vínculo. Ao completar a sincronia, a arma desperta.</p>
+        <div id="relicList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="reliquias">+ Adicionar relíquia</button>
+      </div>
+    </section>
+
+    <!-- ============ VÍNCULOS ============ -->
+    <section id="vinculos" class="tab-panel">
+      <div class="card">
+        <h2>Técnicas</h2>
+        <p class="hint">Até quatro equipadas.</p>
+        <div class="panel-grid panel-grid-4">
+          <div class="field-row-col"><label>Técnica 1</label><input type="text" class="input" data-field="tecnicas.0.nome"><textarea class="input textarea-sm" data-field="tecnicas.0.efeito" placeholder="Efeito"></textarea></div>
+          <div class="field-row-col"><label>Técnica 2</label><input type="text" class="input" data-field="tecnicas.1.nome"><textarea class="input textarea-sm" data-field="tecnicas.1.efeito" placeholder="Efeito"></textarea></div>
+          <div class="field-row-col"><label>Técnica 3</label><input type="text" class="input" data-field="tecnicas.2.nome"><textarea class="input textarea-sm" data-field="tecnicas.2.efeito" placeholder="Efeito"></textarea></div>
+          <div class="field-row-col"><label>Técnica 4</label><input type="text" class="input" data-field="tecnicas.3.nome"><textarea class="input textarea-sm" data-field="tecnicas.3.efeito" placeholder="Efeito"></textarea></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Invocação</h2>
+        <div id="invocationList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="invocacoes">+ Adicionar invocação</button>
+      </div>
+
+      <div class="card">
+        <h2>Pactos</h2>
+        <p class="hint">Celestiais, Demônios, Entidades, Folclore, Animais Místicos.</p>
+        <div id="pactList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="pactos">+ Adicionar pacto</button>
+      </div>
+
+      <div class="card">
+        <h2>Relacionamentos</h2>
+        <div id="relationshipList" class="dyn-list"></div>
+        <button type="button" class="btn-add" data-add="relacionamentos">+ Adicionar NPC</button>
+      </div>
+
+      <div class="panel-grid">
+        <div class="card">
+          <h2>Fama</h2>
+          <div id="fameList" class="fame-grid"></div>
+        </div>
+        <div class="card">
+          <h2>Reputação</h2>
+          <div class="tag-group tag-group-wrap" data-radio="reputacao">
+            <button type="button" class="tag" data-value="Muito Procurado">Muito Procurado</button>
+            <button type="button" class="tag" data-value="Desconhecido">Desconhecido</button>
+            <button type="button" class="tag" data-value="Herói">Herói</button>
+            <button type="button" class="tag" data-value="Caçado">Caçado</button>
+            <button type="button" class="tag" data-value="Lenda">Lenda</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Diário</h2>
+        <div class="panel-grid panel-grid-3">
+          <div class="field-row-col"><label>Casos Resolvidos</label><textarea class="input textarea-md" data-field="diario.casos"></textarea></div>
+          <div class="field-row-col"><label>Entidades Derrotadas</label><textarea class="input textarea-md" data-field="diario.entidades"></textarea></div>
+          <div class="field-row-col"><label>Objetos Encontrados</label><textarea class="input textarea-md" data-field="diario.objetos"></textarea></div>
+          <div class="field-row-col"><label>Pessoas Salvas</label><textarea class="input textarea-md" data-field="diario.pessoas"></textarea></div>
+          <div class="field-row-col"><label>Segredos Descobertos</label><textarea class="input textarea-md" data-field="diario.segredos"></textarea></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="dossier-footer">
+    <button id="saveButton" class="btn-save" type="button">Selar Ficha</button>
+    <span id="saveStatus" class="save-status"></span>
+  </footer>
+
+</div>
+
+<script>
+// =============================================
+// ✨ ABSCONDITUS — FICHA DE INVESTIGADOR
+// =============================================
+
+const STORAGE_KEY = 'absconditusCharacter';
+
+const ATTRIBUTES = {
+    corpo: ['Força', 'Agilidade', 'Resistência', 'Precisão', 'Reflexo'],
+    mente: ['Inteligência', 'Percepção', 'Investigação', 'Ocultismo', 'Carisma'],
+    espirito: ['Controle Superno', 'Afinidade', 'Concentração', 'Determinação', 'Fé']
+};
+
+const SPECIALIZATIONS = [
+    'Arma de fogo', 'Espadas', 'Facas', 'Arco', 'Artes Marciais', 'Rastreamento',
+    'Investigação', 'Furtividade', 'Selamentos', 'Exorcismo', 'Medicina',
+    'Pilotagem', 'Hackeamento', 'Liderança', 'Sobrevivência'
+];
+
+const RESISTANCES = ['Físico', 'Mental', 'Espiritual', 'Maldição', 'Veneno', 'Fogo', 'Gelo', 'Eletricidade', 'Trevas', 'Luz'];
+
+const FAME_FACTIONS = [
+    { key: 'credo', label: 'Credo' },
+    { key: 'igreja', label: 'Igreja' },
+    { key: 'bruxas', label: 'Bruxas' },
+    { key: 'magos', label: 'Magos' },
+    { key: 'mercadoNegro', label: 'Mercado Negro' },
+    { key: 'japao', label: 'Japão' }
+];
+
+function defaultState() {
+    const attributes = {};
+    Object.values(ATTRIBUTES).flat().forEach(name => { attributes[slug(name)] = 1; });
+
+    const specializations = {};
+    SPECIALIZATIONS.forEach(name => { specializations[slug(name)] = 0; });
+
+    const resistances = {};
+    RESISTANCES.forEach(name => { resistances[slug(name)] = 0; });
+
+    const fama = {};
+    FAME_FACTIONS.forEach(f => { fama[f.key] = 0; });
+
+    return {
+        personal: { nome: '', codinome: '', idade: '', raca: '', organizacao: '', ranking: '', classe: '' },
+        folk: { tipo: '' },
+        elemental: { afinidade: '' },
+        attributes,
+        specializations,
+        vitals: { hpAtual: 10, hpMax: 10, spAtual: 10, spMax: 10, sanAtual: 50, sanMax: 50, fadigaAtual: 0, fadigaMax: 10 },
+        resistances,
+        corrupcao: 0,
+        despertar: { tipo: '' },
+        inventory: { armaPrincipal: '', armaSecundaria: '', armaReserva: '', objetoSuperno: '', talisma: '', municao: '', curativos: '' },
+        equipment: { capacete: '', peitoral: '', luvas: '', calca: '', botas: '', acessorios: '' },
+        objetosSuperno: [],
+        proficiencias: [],
+        reliquias: [],
+        tecnicas: [{ nome: '', efeito: '' }, { nome: '', efeito: '' }, { nome: '', efeito: '' }, { nome: '', efeito: '' }],
+        invocacoes: [],
+        pactos: [],
+        relacionamentos: [],
+        fama,
+        reputacao: '',
+        diario: { casos: '', entidades: '', objetos: '', pessoas: '', segredos: '' },
+        credCard: { numeroId: '', tipoSanguineo: '', contatoEmergencia: '', status: 'Ativo', assinaturaLider: '' }
+    };
+}
+
+function slug(text) {
+    return text.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '');
+}
+
+let state = defaultState();
+
+// ---------- helpers de caminho (dot-path get/set) ----------
+function getPath(obj, path) {
+    return path.split('.').reduce((acc, key) => (acc === undefined || acc === null) ? undefined : acc[isFinite(key) ? Number(key) : key], obj);
+}
+function setPath(obj, path, value) {
+    const keys = path.split('.');
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+        const k = isFinite(keys[i]) ? Number(keys[i]) : keys[i];
+        if (cur[k] === undefined) cur[k] = isFinite(keys[i + 1]) ? [] : {};
+        cur = cur[k];
+    }
+    const lastKey = keys[keys.length - 1];
+    cur[isFinite(lastKey) ? Number(lastKey) : lastKey] = value;
+}
+
+// =============================================
+// ✨ PERSISTÊNCIA
+// =============================================
+function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const status = document.getElementById('saveStatus');
+    status.textContent = 'Ficha selada às ' + new Date().toLocaleTimeString();
+    setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+function loadState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(defaultState(), parsed);
+        // merge de sub-objetos para garantir chaves novas
+        ['personal', 'folk', 'elemental', 'attributes', 'specializations', 'vitals', 'resistances',
+         'despertar', 'inventory', 'equipment', 'fama', 'diario', 'credCard'].forEach(key => {
+            state[key] = Object.assign(defaultState()[key], parsed[key] || {});
+        });
+    } catch (e) {
+        console.error('Erro ao carregar ficha:', e);
+        state = defaultState();
+    }
+}
+
+// =============================================
+// ✨ TABS
+// =============================================
+function setupTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+}
+
+// =============================================
+// ✨ CAMPOS SIMPLES (data-field) + MIRROR (cartão)
+// =============================================
+function refreshMirrors() {
+    document.querySelectorAll('[data-mirror]').forEach(el => {
+        const val = getPath(state, el.dataset.mirror);
+        el.textContent = val && val !== '' ? val : '—';
+    });
+}
+
+function bindSimpleFields() {
+    document.querySelectorAll('[data-field]').forEach(el => {
+        const path = el.dataset.field;
+        const val = getPath(state, path);
+        el.value = (val === undefined || val === null) ? '' : val;
+
+        el.addEventListener('input', () => {
+            const raw = el.type === 'number' ? (el.value === '' ? '' : Number(el.value)) : el.value;
+            setPath(state, path, raw);
+            refreshMirrors();
+            if (el.dataset.gauge) updateGauges();
+        });
+    });
+}
+
+// =============================================
+// ✨ TAG GROUPS (seleção única estilo rádio)
+// =============================================
+function bindTagGroups() {
+    document.querySelectorAll('[data-radio]').forEach(group => {
+        const path = group.dataset.radio;
+        const current = getPath(state, path);
+
+        group.querySelectorAll('.tag, .awaken-card').forEach(btn => {
+            if (btn.dataset.value === current) btn.classList.add('selected');
+            btn.addEventListener('click', () => {
+                const newVal = btn.classList.contains('selected') ? '' : btn.dataset.value;
+                setPath(state, path, newVal);
+                group.querySelectorAll('.tag, .awaken-card').forEach(b => b.classList.remove('selected'));
+                if (newVal) btn.classList.add('selected');
+                refreshMirrors();
+            });
+        });
+    });
+}
+
+// =============================================
+// ✨ PIP TRACKER (genérico, usado em atributos e corrupção)
+// =============================================
+function renderPipTracker(container, max, value, onChange) {
+    container.innerHTML = '';
+    for (let i = 1; i <= max; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'pip' + (i <= value ? ' filled' : '');
+        pip.addEventListener('click', () => {
+            const newValue = (i === value) ? i - 1 : i;
+            onChange(newValue);
+            renderPipTracker(container, max, newValue, onChange);
+        });
+        container.appendChild(pip);
+    }
+}
+
+function renderAttributes() {
+    const groups = { corpo: 'attrCorpo', mente: 'attrMente', espirito: 'attrEspirito' };
+    Object.entries(ATTRIBUTES).forEach(([groupKey, names]) => {
+        const card = document.getElementById(groups[groupKey]);
+        names.forEach(name => {
+            const key = slug(name);
+            const row = document.createElement('div');
+            row.className = 'attr-item';
+            const label = document.createElement('span');
+            label.className = 'attr-name';
+            label.textContent = name;
+            const pipContainer = document.createElement('div');
+            pipContainer.className = 'pip-row';
+            row.appendChild(label);
+            row.appendChild(pipContainer);
+            card.appendChild(row);
+
+            renderPipTracker(pipContainer, 10, state.attributes[key] || 0, (val) => {
+                state.attributes[key] = val;
+            });
+        });
+    });
+}
+
+function renderCorruption() {
+    const container = document.getElementById('corruptionPips');
+    renderPipTracker(container, 10, state.corrupcao || 0, (val) => { state.corrupcao = val; });
+}
+
+// =============================================
+// ✨ ESTRELAS (especializações)
+// =============================================
+function renderSpecializations() {
+    const container = document.getElementById('specList');
+    container.innerHTML = '';
+    SPECIALIZATIONS.forEach(name => {
+        const key = slug(name);
+        const row = document.createElement('div');
+        row.className = 'spec-item';
+        const label = document.createElement('span');
+        label.textContent = name;
+        const starRow = document.createElement('div');
+        starRow.className = 'star-row';
+        row.appendChild(label);
+        row.appendChild(starRow);
+        container.appendChild(row);
+        renderStars(starRow, 5, state.specializations[key] || 0, (val) => { state.specializations[key] = val; });
+    });
+}
+
+function renderStars(container, max, value, onChange) {
+    container.innerHTML = '';
+    for (let i = 1; i <= max; i++) {
+        const star = document.createElement('span');
+        star.className = 'star' + (i <= value ? ' filled' : '');
+        star.textContent = '★';
+        star.addEventListener('click', () => {
+            const newValue = (i === value) ? i - 1 : i;
+            onChange(newValue);
+            renderStars(container, max, newValue, onChange);
+        });
+        container.appendChild(star);
+    }
+}
+
+// =============================================
+// ✨ RESISTÊNCIAS E FAMA (grids numéricos)
+// =============================================
+function renderResistances() {
+    const container = document.getElementById('resistList');
+    container.innerHTML = '';
+    RESISTANCES.forEach(name => {
+        const key = slug(name);
+        const item = document.createElement('div');
+        item.className = 'resist-item';
+        item.innerHTML = `<label>${name}</label>`;
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.className = 'input input-sm';
+        input.value = state.resistances[key] || 0;
+        input.addEventListener('input', () => { state.resistances[key] = Number(input.value) || 0; });
+        item.appendChild(input);
+        container.appendChild(item);
+    });
+}
+
+function renderFame() {
+    const container = document.getElementById('fameList');
+    container.innerHTML = '';
+    FAME_FACTIONS.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'fame-item';
+        item.innerHTML = `<label>${f.label}</label>`;
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.className = 'input input-sm';
+        input.min = 0;
+        input.max = 100;
+        input.value = state.fama[f.key] || 0;
+        input.addEventListener('input', () => { state.fama[f.key] = Number(input.value) || 0; });
+        item.appendChild(input);
+        container.appendChild(item);
+    });
+}
+
+// =============================================
+// ✨ GAUGES (HP / SP / SAN / Fadiga)
+// =============================================
+function updateGauges() {
+    const map = [
+        { atual: 'vitals.hpAtual', max: 'vitals.hpMax', el: 'gaugeHp' },
+        { atual: 'vitals.spAtual', max: 'vitals.spMax', el: 'gaugeSp' },
+        { atual: 'vitals.sanAtual', max: 'vitals.sanMax', el: 'gaugeSan' },
+        { atual: 'vitals.fadigaAtual', max: 'vitals.fadigaMax', el: 'gaugeFadiga' }
+    ];
+    map.forEach(({ atual, max, el }) => {
+        const a = Number(getPath(state, atual)) || 0;
+        const m = Number(getPath(state, max)) || 0;
+        const pct = m > 0 ? Math.min(100, Math.max(0, (a / m) * 100)) : 0;
+        const bar = document.getElementById(el);
+        if (bar) bar.style.width = pct + '%';
+    });
+}
+
+// =============================================
+// ✨ LISTAS DINÂMICAS (genérico)
+// =============================================
+function createDynFieldInput(field, item, onUpdate) {
+    let el;
+    if (field.type === 'select') {
+        el = document.createElement('select');
+        el.className = 'input';
+        field.options.forEach(opt => {
+            const optionEl = document.createElement('option');
+            optionEl.value = opt;
+            optionEl.textContent = opt;
+            el.appendChild(optionEl);
+        });
+        el.value = item[field.key] || field.options[0];
+    } else if (field.type === 'number') {
+        el = document.createElement('input');
+        el.type = 'number';
+        el.className = 'input';
+        el.value = item[field.key] || 0;
+    } else {
+        el = document.createElement('input');
+        el.type = 'text';
+        el.className = 'input';
+        el.value = item[field.key] || '';
+    }
+    el.placeholder = field.label;
+    el.addEventListener('input', () => {
+        item[field.key] = field.type === 'number' ? Number(el.value) || 0 : el.value;
+        onUpdate();
+    });
+    return el;
+}
+
+function renderDynList(containerId, arrayKey, fields, extraRenderer) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    state[arrayKey].forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'dyn-row';
+
+        const fieldsWrap = document.createElement('div');
+        fieldsWrap.className = 'dyn-row-fields';
+        fields.forEach(field => {
+            fieldsWrap.appendChild(createDynFieldInput(field, item, () => saveDraft()));
+        });
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'dyn-remove';
+        removeBtn.textContent = '✕';
+        removeBtn.addEventListener('click', () => {
+            state[arrayKey].splice(idx, 1);
+            renderDynList(containerId, arrayKey, fields, extraRenderer);
+        });
+
+        row.appendChild(fieldsWrap);
+        row.appendChild(removeBtn);
+        container.appendChild(row);
+
+        if (extraRenderer) extraRenderer(row, item, idx, () => renderDynList(containerId, arrayKey, fields, extraRenderer));
+    });
+}
+
+function saveDraft() { /* mantém estado em memória; salvo explicitamente pelo botão */ }
+
+function setupAddButtons() {
+    const configs = {
+        objetosSuperno: { container: 'objetosSupernoList', fields: [{ key: 'nome', label: 'Nome' }, { key: 'descricao', label: 'Descrição' }] },
+        proficiencias: { container: 'proficiencyList', fields: [{ key: 'arma', label: 'Arma' }, { key: 'nivel', label: 'Nível', type: 'number' }] },
+        invocacoes: { container: 'invocationList', fields: [{ key: 'nome', label: 'Nome' }, { key: 'especie', label: 'Espécie' }, { key: 'habilidade', label: 'Habilidade' }, { key: 'afinidade', label: 'Afinidade' }, { key: 'nivel', label: 'Nível', type: 'number' }] },
+        pactos: {
+            container: 'pactList',
+            fields: [
+                { key: 'nome', label: 'Nome da entidade' },
+                { key: 'tipo', label: 'Tipo', type: 'select', options: ['Celestiais', 'Demônios', 'Entidades', 'Folclore', 'Animais Místicos'] },
+                { key: 'descricao', label: 'Descrição' }
+            ]
+        },
+        relacionamentos: {
+            container: 'relationshipList',
+            fields: [
+                { key: 'npc', label: 'NPC' },
+                { key: 'confianca', label: 'Confiança (0-10)', type: 'number' },
+                { key: 'respeito', label: 'Respeito (0-10)', type: 'number' },
+                { key: 'rivalidade', label: 'Rivalidade (0-10)', type: 'number' }
+            ]
+        }
+    };
+
+    document.querySelectorAll('[data-add]').forEach(btn => {
+        const key = btn.dataset.add;
+        btn.addEventListener('click', () => {
+            const empty = {};
+            configs[key].fields.forEach(f => { empty[f.key] = f.type === 'select' ? f.options[0] : ''; });
+            state[key].push(empty);
+            renderDynList(configs[key].container, key, configs[key].fields);
+        });
+    });
+
+    Object.entries(configs).forEach(([key, cfg]) => {
+        renderDynList(cfg.container, key, cfg.fields);
+    });
+
+    setupRelics();
+}
+
+// ---------- Relíquias (lista dinâmica com pip tracker de sincronia) ----------
+function setupRelics() {
+    const fields = [{ key: 'nome', label: 'Nome da relíquia' }];
+    const addBtn = document.querySelector('[data-add="reliquias"]');
+
+    function render() {
+        renderDynList('relicList', 'reliquias', fields, (row, item, idx, rerender) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'relic-sync';
+            const label = document.createElement('span');
+            label.className = 'relic-sync-label';
+            label.textContent = (item.sincronia || 0) * 10 + '%';
+            const pipContainer = document.createElement('div');
+            pipContainer.className = 'pip-row';
+            wrap.appendChild(pipContainer);
+            wrap.appendChild(label);
+            row.querySelector('.dyn-row-fields').appendChild(wrap);
+
+            renderPipTracker(pipContainer, 10, item.sincronia || 0, (val) => {
+                item.sincronia = val;
+                label.textContent = val * 10 + '%';
+                let awakeMsg = row.querySelector('.relic-awake');
+                if (val >= 10) {
+                    if (!awakeMsg) {
+                        awakeMsg = document.createElement('div');
+                        awakeMsg.className = 'relic-awake';
+                        awakeMsg.textContent = '⚔ Relíquia desperta';
+                        row.querySelector('.dyn-row-fields').appendChild(awakeMsg);
+                    }
+                } else if (awakeMsg) {
+                    awakeMsg.remove();
+                }
+            });
+
+            if ((item.sincronia || 0) >= 10) {
+                const awakeMsg = document.createElement('div');
+                awakeMsg.className = 'relic-awake';
+                awakeMsg.textContent = '⚔ Relíquia desperta';
+                row.querySelector('.dyn-row-fields').appendChild(awakeMsg);
+            }
+        });
+    }
+
+    addBtn.addEventListener('click', () => {
+        state.reliquias.push({ nome: '', sincronia: 0 });
+        render();
+    });
+
+    render();
+}
+
+// =============================================
+// ✨ CARTÃO DO CREDO (flip)
+// =============================================
+function setupCredCard() {
+    const flip = document.getElementById('credCardFlip');
+    flip.addEventListener('click', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        flip.classList.toggle('flipped');
+    });
+    // evita que clique nos campos internos vire o cartão
+    flip.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('click', (e) => e.stopPropagation());
+    });
+}
+
+// =============================================
+// ✨ INICIALIZAÇÃO
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+    loadState();
+
+    setupTabs();
+    renderAttributes();
+    renderSpecializations();
+    renderResistances();
+    renderCorruption();
+    renderFame();
+    setupAddButtons();
+    setupCredCard();
+
+    bindSimpleFields();
+    bindTagGroups();
+    refreshMirrors();
+    updateGauges();
+
+    document.getElementById('saveButton').addEventListener('click', saveState);
+});
+</script>
+
+<script>
+/* =========================================================
+   ABSCONDITUS — EXPORTAÇÃO / IMPORTAÇÃO DE PERSONAGEM
+   O arquivo exportado contém apenas os dados da ficha.
+   ========================================================= */
+(function setupCharacterFileIO() {
+  const EXPORT_VERSION = 1;
+
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  function downloadText(filename, text, mime = "application/json") {
+    const blob = new Blob([text], { type: mime + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function safeFileName(name) {
+    const base = String(name || "Personagem").trim() || "Personagem";
+    return base.replace(/[<>:"/\\|?*]+/g, "_").replace(/\s+/g, "_").slice(0, 80);
+  }
+
+  function mergeDeep(target, source) {
+    if (!source || typeof source !== "object") return target;
+    for (const key of Object.keys(source)) {
+      if (
+        source[key] &&
+        typeof source[key] === "object" &&
+        !Array.isArray(source[key]) &&
+        target[key] &&
+        typeof target[key] === "object" &&
+        !Array.isArray(target[key])
+      ) {
+        mergeDeep(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  }
+
+  function refreshEverything() {
+    // Re-render functions already present in the original ficha.
+    const fns = [
+      "renderAttributes", "renderCorruption", "renderSpecializations",
+      "renderResistances", "renderFame", "updateGauges",
+      "refreshMirrors", "setupAddButtons", "bindSimpleFields",
+      "bindTagGroups", "loadState"
+    ];
+
+    // loadState isn't used here; the state object has already been replaced.
+    if (typeof renderAttributes === "function") renderAttributes();
+    if (typeof renderCorruption === "function") renderCorruption();
+    if (typeof renderSpecializations === "function") renderSpecializations();
+    if (typeof renderResistances === "function") renderResistances();
+    if (typeof renderFame === "function") renderFame();
+    if (typeof updateGauges === "function") updateGauges();
+    if (typeof refreshMirrors === "function") refreshMirrors();
+
+    // Dynamic lists can be refreshed by invoking the original add-button setup
+    // only if the page exposes its own renderer; avoid rebinding listeners.
+    if (typeof window.renderDynList === "function") {
+      // no-op: original initialization handles these lists
+    }
+
+    // Generic refresh: update fields from the newly imported state.
+    document.querySelectorAll("[data-field]").forEach(el => {
+      if (typeof getPath === "function") {
+        const val = getPath(state, el.dataset.field);
+        el.value = (val === undefined || val === null) ? "" : val;
+      }
+    });
+    if (typeof refreshMirrors === "function") refreshMirrors();
+
+    // Rebuild known dynamic lists if their setup function is exposed.
+    if (typeof setupAddButtons === "function") {
+      // The original function also binds buttons, so don't call it again.
+      // Instead dispatch a custom event for any future extension.
+    }
+    document.dispatchEvent(new CustomEvent("absconditus:characterImported"));
+  }
+
+  function exportCharacter() {
+    if (typeof state === "undefined") {
+      alert("Não foi possível acessar os dados da ficha.");
+      return;
+    }
+
+    const character = {
+      app: "Absconditus",
+      type: "character",
+      version: EXPORT_VERSION,
+      exportedAt: new Date().toISOString(),
+      data: clone(state)
+    };
+
+    const name =
+      character.data?.personal?.nome ||
+      character.data?.personal?.codinome ||
+      "Personagem";
+
+    downloadText(
+      safeFileName(name) + ".absconditus",
+      JSON.stringify(character, null, 2)
+    );
+  }
+
+  function importCharacter(file) {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      try {
+        const parsed = JSON.parse(reader.result);
+
+        // Accept both the new .absconditus envelope and a raw state JSON.
+        const imported = parsed?.data && parsed?.type === "character"
+          ? parsed.data
+          : parsed;
+
+        if (!imported || typeof imported !== "object") {
+          throw new Error("Formato inválido.");
+        }
+
+        if (typeof defaultState !== "function") {
+          throw new Error("Estrutura da ficha indisponível.");
+        }
+
+        // Build a fresh state so missing/new fields keep their defaults.
+        state = mergeDeep(defaultState(), imported);
+
+        // Persist immediately.
+        if (typeof saveState === "function") saveState();
+
+        refreshEverything();
+
+        alert("Ficha importada com sucesso! 🕯️");
+      } catch (err) {
+        console.error(err);
+        alert("Não foi possível importar esta ficha. Verifique se o arquivo é um .absconditus válido.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function newCharacter() {
+    const ok = confirm(
+      "Criar uma nova ficha?\n\n" +
+      "Isso substituirá a ficha atual neste dispositivo. " +
+      "Se quiser guardar o personagem atual, exporte a ficha antes."
+    );
+    if (!ok) return;
+
+    if (typeof defaultState !== "function") {
+      alert("Não foi possível criar uma ficha nova.");
+      return;
+    }
+
+    state = defaultState();
+    if (typeof saveState === "function") saveState();
+    refreshEverything();
+    alert("Nova ficha criada. Boa aventura. 🕯️");
+  }
+
+  function initIO() {
+    const exportBtn = document.getElementById("exportCharacterBtn");
+    const importBtn = document.getElementById("importCharacterBtn");
+    const input = document.getElementById("importCharacterInput");
+    const newBtn = document.getElementById("newCharacterBtn");
+
+    exportBtn?.addEventListener("click", exportCharacter);
+    importBtn?.addEventListener("click", () => input?.click());
+    input?.addEventListener("change", e => {
+      importCharacter(e.target.files?.[0]);
+      e.target.value = "";
+    });
+    newBtn?.addEventListener("click", newCharacter);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initIO);
+  } else {
+    initIO();
+  }
+})();
+</script>
+
+</body>
+</html>
