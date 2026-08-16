@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ABSCONDITUS — Ficha de Investigador</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=3xazcb1p0lw3n1RoKCThlK62Y58JdpSnyzs9EH2WyXNl9zkpUEfjvo7EbtsZlqENd0A7ADyy_EHxAYeELX6tfRK22Ilb-E-RMFN6CHtTOlDkRjnWV8KMszWSKeHWITNFwjH1D-BmMooe7t3AFkQwrz9czhgD5j05Fcck3lnhcr7Nyc2U3tB46CPtKHYNGLZKGUJVGpIyP4Nop2c3e0Hyk4MWAFbyI37Xs5r5gqRWunJsbozxVoyHMJFpLk5-a9FODiLN1NSSlli0p8uKFJ5uquTy0_fGgGC4PmmNBt75IGjUxFUaMulgmrr87L4NPv7r6SyKQYq5YomJbMnxR-liCQ" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDk4YjA4MjBlYjEyNDg5NDljMDhiMzQ3MCZmbj1hYnNjb25kaXR1c19pbmRleF9ub3ZvX2NhcnRhby5odG1sJmNkPWF0dGFjaG1lbnQmdHM9NDk2MzY1JnA9ZnMmY2lkPTEmc2lnPWZkY2YwYTZmY2I0YWQ1YjdhYzQzZTBkZTRlYTQyM2MxYjY4YjNhYzc2ZmZjZGY0MWFjNWVmOWU0MmUyNDdhYTEmdj0w"/><style>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=OwMtN8wj9z-66Yedbu6wFxvf28tdMuTfhXlSLIIbGfg2EZBZF8S4X0MRoCNG0pBq-hBrwJ5pwsMNtmZQr3L1g-Vi9vmoIHCdT8CteZkQ_HdQvbrwjPyzYouae-F0s_yJvGSvlKvWReMufA01hddw--9eIhLgXoDI_PJ3mEklRJWa7PPX_EP-sj77LsrcQPHTPjuAx6zjEok1jFxoywXigQERN6YKp1ZXAaBuiG7ahqahxms2gTYeti5ZBs8XHyGn8xUjYheiEM25Z5J5xiHMcUJ4F4F1phutFxy_3gGi83mY6HTUzIHyreJzMHksN9fgJ9femziI_--tWkkG4lUPxJIwFntb4G33pqKbW0OvXxc" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDQzODg4MjBlOTc1YmFiMmZkOWJlODdhMCZmbj1hYnNjb25kaXR1c19pbmRleF9ub3ZvX2NhcnRhb19naXRodWIuaHRtbCZjZD1hdHRhY2htZW50JnRzPTQ5NjM2NSZwPWZzJmNpZD0xJnNpZz04Y2JlYmRmYTNiM2UwNmM2YzM0NzZjMTU5MzBjZTkwZTU3YWI2Mjg0NTczOGFlY2ExODE0MTczMTVmY2RkMGY3JnY9MA"/><style>
 /* ================= TOKENS ================= */
 :root {
     --void: #050505;
@@ -128,7 +128,11 @@ body {
     padding: 20px;
     margin-bottom: 18px;
 }
-
+.card:has(#credCardFlip) {
+    max-width: 300px;
+    margin-left: 0;
+    margin-right: auto;
+}
 .card h2 {
     font-family: var(--font-display);
     font-size: 1.3em;
@@ -471,21 +475,38 @@ body {
 }
 .cred-back { transform: rotateY(180deg); }
 
-/* Logo da organização: reaproveita o emblema do Credo e fica associado à seleção atual. */
+/* Logos das organizações: carregados da pasta assets/logos do GitHub Pages. */
 .cred-org-logo {
     display: block;
     width: 52px;
     height: 52px;
+    object-fit: contain;
     color: var(--bone);
-    opacity: .88;
+    opacity: .92;
     flex: 0 0 auto;
 }
 .cred-org-logo.small {
     width: 34px;
     height: 34px;
-    opacity: .68;
+    opacity: .72;
 }
-.cred-org-logo use { pointer-events: none; }
+.cred-org-logo.logo-missing {
+    border: 1px dashed var(--line-strong);
+    box-sizing: border-box;
+    padding: 5px;
+}
+.cred-org-logo.logo-missing::after {
+    content: 'LOGO';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--bone-dim);
+}
 
 /* FRENTE */
 .cred-front {
@@ -835,7 +856,7 @@ body {
       </div>
 
       <div class="card">
-        <h2>Cartão do Credo</h2>
+        <h2>Cartão de identidade</h2>
         <p class="hint">Clique no cartão para virar. Clique na foto para adicionar ou alterar.</p>
         <div class="card-flip" id="credCardFlip">
           <div class="card-flip-inner">
@@ -844,15 +865,7 @@ body {
             <div class="cred-face cred-front">
               <div class="cred-front-photo">
                 <div class="cred-photo-box" id="credPhotoBox" role="button" tabindex="0" aria-label="Adicionar ou alterar foto">FOTO</div>
-                <svg class="cred-org-logo" viewBox="0 0 680 680" aria-hidden="true">
-                  <use href="#swordN"/>
-                  <use href="#swordN" transform="rotate(90 340 340)"/>
-                  <use href="#swordN" transform="rotate(180 340 340)"/>
-                  <use href="#swordN" transform="rotate(270 340 340)"/>
-                  <circle cx="340" cy="340" r="62" fill="#0a0a0a" stroke="#8a1420" stroke-width="3"/>
-                  <circle cx="340" cy="340" r="30" fill="#1a1a1a" stroke="#8a1420" stroke-width="1.5"/>
-                  <ellipse cx="340" cy="340" rx="9" ry="14" fill="#8a1420"/>
-                </svg>
+                <img class="cred-org-logo" data-org-logo="front" src="assets/logos/credo-do-cacador.svg" alt="Logo da organização">
                 <span class="cred-org-name" data-mirror="personal.organizacao">—</span>
               </div>
 
@@ -871,15 +884,7 @@ body {
                   <span class="cred-label">Registro do Membro</span>
                   <div class="cred-back-title" data-mirror="personal.organizacao">—</div>
                 </div>
-                <svg class="cred-org-logo small" viewBox="0 0 680 680" aria-hidden="true">
-                  <use href="#swordN"/>
-                  <use href="#swordN" transform="rotate(90 340 340)"/>
-                  <use href="#swordN" transform="rotate(180 340 340)"/>
-                  <use href="#swordN" transform="rotate(270 340 340)"/>
-                  <circle cx="340" cy="340" r="62" fill="#0a0a0a" stroke="#8a1420" stroke-width="3"/>
-                  <circle cx="340" cy="340" r="30" fill="#1a1a1a" stroke="#8a1420" stroke-width="1.5"/>
-                  <ellipse cx="340" cy="340" rx="9" ry="14" fill="#8a1420"/>
-                </svg>
+                <img class="cred-org-logo small" data-org-logo="back-header" src="assets/logos/credo-do-cacador.svg" alt="Logo da organização">
               </div>
 
               <div class="cred-back-fields">
@@ -902,15 +907,7 @@ body {
               </div>
 
               <div class="cred-back-org">
-                <svg class="cred-org-logo small" viewBox="0 0 680 680" aria-hidden="true">
-                  <use href="#swordN"/>
-                  <use href="#swordN" transform="rotate(90 340 340)"/>
-                  <use href="#swordN" transform="rotate(180 340 340)"/>
-                  <use href="#swordN" transform="rotate(270 340 340)"/>
-                  <circle cx="340" cy="340" r="62" fill="#0a0a0a" stroke="#8a1420" stroke-width="3"/>
-                  <circle cx="340" cy="340" r="30" fill="#1a1a1a" stroke="#8a1420" stroke-width="1.5"/>
-                  <ellipse cx="340" cy="340" rx="9" ry="14" fill="#8a1420"/>
-                </svg>
+                <img class="cred-org-logo small" data-org-logo="back-footer" src="assets/logos/credo-do-cacador.svg" alt="Logo da organização">
                 <span class="cred-back-org-name" data-mirror="personal.organizacao">—</span>
               </div>
             </div>
@@ -1327,6 +1324,41 @@ function bindSimpleFields() {
 }
 
 // =============================================
+// ✨ LOGOS DAS ORGANIZAÇÕES
+// Os arquivos ficam em: assets/logos/
+// Você pode adicionar/substituir os SVGs no GitHub sem alterar o HTML.
+// =============================================
+const ORGANIZATION_LOGOS = {
+    'Credo do Caçador': 'assets/logos/credo-do-cacador.svg',
+    'Centro de Observação': 'assets/logos/centro-de-observacao.svg',
+    'Pax Vobiscum': 'assets/logos/pax-vobiscum.svg',
+    'Filhos da Terra': 'assets/logos/filhos-da-terra.svg',
+    'Ordem do Abismo': 'assets/logos/ordem-do-abismo.svg'
+};
+
+function updateOrganizationLogos(organization) {
+    const src = ORGANIZATION_LOGOS[organization] || '';
+    document.querySelectorAll('[data-org-logo]').forEach(img => {
+        img.classList.remove('logo-missing');
+        if (!src) {
+            img.removeAttribute('src');
+            img.classList.add('logo-missing');
+            return;
+        }
+        img.src = src;
+        img.alt = organization ? `Logo de ${organization}` : 'Logo da organização';
+    });
+}
+
+document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (img && img.matches && img.matches('[data-org-logo]')) {
+        img.classList.add('logo-missing');
+        img.removeAttribute('src');
+    }
+}, true);
+
+// =============================================
 // ✨ ORGANIZAÇÕES — especialidade e visão do Superno
 // =============================================
 const ORGANIZATIONS = {
@@ -1338,6 +1370,7 @@ const ORGANIZATIONS = {
 };
 
 function updateOrganizationDetails(organization) {
+    updateOrganizationLogos(organization);
     const info = ORGANIZATIONS[organization] || { especialidade: '', visaoSuperno: '' };
     setPath(state, 'personal.especialidade', info.especialidade);
     setPath(state, 'personal.visaoSuperno', info.visaoSuperno);
